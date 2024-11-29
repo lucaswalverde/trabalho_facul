@@ -1,0 +1,126 @@
+1. Configuração do Projeto
+Vamos começar criando a estrutura básica do projeto: PIT 1 ( que inclusive não lembro onde esta/ perdi )
+
+sh
+# Criação da pasta do projeto
+mkdir projeto-pit1
+cd projeto-pit1
+
+# Inicialização do repositório GIT
+git init
+
+# Inicialização do projeto Node.js
+npm init -y
+
+# Instalação das dependências
+npm install express mongoose
+
+
+
+2. Estrutura de Pastas
+A estrutura do nosso projeto será assim:
+
+projeto-pit1/
+├── frontend/
+│   ├── index.html
+│   ├── styles.css
+│   └── script.js
+├── backend/
+│   ├── server.js
+│   └── models/
+│       └── item.js
+├── README.md
+└── .gitignore
+
+
+
+3. Front-End
+index.html
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projeto PIT I</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Bem-vindo ao Projeto PIT I</h1>
+    <div id="app"></div>
+    <script src="script.js"></script>
+</body>
+</html>
+styles.css
+
+css
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #333;
+}
+script.js
+
+javascript
+document.addEventListener('DOMContentLoaded', function() {
+    const appDiv = document.getElementById('app');
+    appDiv.innerHTML = '<p>Aplicação em funcionamento!</p>';
+});
+4. Back-End
+server.js
+
+javascript
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(bodyParser.json());
+
+mongoose.connect('mongodb://localhost/projeto-pit1', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const Item = require('./models/item');
+
+// Rota para obter itens
+app.get('/api/items', async (req, res) => {
+    const items = await Item.find();
+    res.json(items);
+});
+
+// Rota para criar item
+app.post('/api/items', async (req, res) => {
+    const newItem = new Item(req.body);
+    await newItem.save();
+    res.json(newItem);
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+models/item.js
+
+javascript
+const mongoose = require('mongoose');
+
+const itemSchema = new mongoose.Schema({
+    name: String,
+    description: String
+});
+
+module.exports = mongoose.model('Item', itemSchema);
+5. Commit e Push no GIT
+Após criar e testar o projeto, vamos versioná-lo no GIT:
+
+sh
+# Adicionar todos os arquivos ao repositório
+git add .
+
+# Fazer o commit das mudanças
+git commit -m "Projeto inicial do PIT I"
+
